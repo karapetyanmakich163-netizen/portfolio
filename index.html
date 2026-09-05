@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Մակիչ Կարապետյան — Web Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #05070a;
+    --panel: #0d1218;
+    --line: #1a222b;
+    --text: #cfe3dc;
+    --muted: #86988f;
+    --teal: #35e0c2;
+    --violet: #8a7dfa;
+    --amber: #ffb454;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  ::selection{ background:var(--teal); color:#06110e; }
+
+  a{ color:inherit; text-decoration:none; }
+
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:0 28px;
+  }
+
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    opacity:.3;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 80%);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  header, main, footer{ position:relative; z-index:1; }
+
+  /* ---------- LANG SWITCH ---------- */
+  .lang-switch{
+    position:fixed;
+    top:18px; right:18px;
+    z-index:20;
+    display:flex;
+    gap:4px;
+    background:rgba(13,18,24,0.85);
+    backdrop-filter:blur(6px);
+    border:1px solid var(--line);
+    border-radius:100px;
+    padding:4px;
+  }
+  .lang-switch button{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    color:var(--muted);
+    background:transparent;
+    border:none;
+    padding:7px 12px;
+    border-radius:100px;
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+  }
+  .lang-switch button.active{
+    background:linear-gradient(100deg, var(--teal), var(--violet));
+    color:#06110e;
+    font-weight:600;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:88px 0 40px;
+    text-align:center;
+  }
+
+  .avatar-stage{
+    display:flex;
+    justify-content:center;
+    margin-bottom:18px;
+  }
+
+  .status-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px;
+    color:var(--teal);
+    background:rgba(53,224,194,0.08);
+    border:1px solid rgba(53,224,194,0.25);
+    padding:6px 14px;
+    border-radius:100px;
+    margin-bottom:26px;
+  }
+  .status-pill .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--teal);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(53,224,194,.5);}
+    70%{box-shadow:0 0 0 8px rgba(53,224,194,0);}
+    100%{box-shadow:0 0 0 0 rgba(53,224,194,0);}
+  }
+
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(38px, 7vw, 62px);
+    letter-spacing:-0.02em;
+    line-height:1.05;
+    color:var(--text);
+  }
+  h1 .last{
+    display:block;
+    background:linear-gradient(100deg, var(--teal), var(--violet));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .role{
+    font-family:'JetBrains Mono', monospace;
+    color:var(--muted);
+    font-size:16px;
+    margin-top:16px;
+  }
+  .role .cursor{
+    display:inline-block;
+    width:9px; height:1.05em;
+    background:var(--amber);
+    margin-left:3px;
+    vertical-align:-2px;
+    animation:blink 1s step-end infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  .hero-actions{
+    margin-top:34px;
+    display:flex;
+    gap:14px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .btn{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    padding:13px 26px;
+    border-radius:10px;
+    transition:transform .15s ease, border-color .15s ease;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  .btn-primary{
+    background:linear-gradient(100deg, var(--teal), var(--violet));
+    color:#06110e;
+  }
+  .btn-primary:hover{ transform:translateY(-2px); }
+  .btn-ghost{
+    border:1px solid var(--line);
+    color:var(--text);
+  }
+  .btn-ghost:hover{ border-color:var(--teal); transform:translateY(-2px); }
+
+  /* ---------- SECTION shell ---------- */
+  section{ padding:64px 0; border-top:1px solid var(--line); }
+  .kicker{
+    font-family:'JetBrains Mono', monospace;
+    color:var(--violet);
+    font-size:13px;
+    margin-bottom:10px;
+  }
+  .kicker::before{ content:"// "; color:var(--muted); }
+  h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:clamp(24px, 4vw, 32px);
+    margin-bottom:28px;
+    letter-spacing:-0.01em;
+    color:var(--text);
+  }
+
+  /* ---------- ABOUT ---------- */
+  .about-text{
+    color:var(--muted);
+    font-size:16.5px;
+    max-width:640px;
+  }
+  .about-text strong{ color:var(--text); font-weight:600; }
+
+  /* ---------- SKILLS ---------- */
+  .skill-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(140px,1fr));
+    gap:12px;
+  }
+  .skill-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px 14px;
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .skill-card:hover{ border-color:var(--teal); transform:translateY(-3px); }
+  .skill-card .glyph{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    color:var(--teal);
+    display:block;
+    margin-bottom:8px;
+  }
+  .skill-card .name{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    color:var(--text);
+  }
+
+  /* ---------- SITES (clickable) ---------- */
+  .site-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+    gap:18px;
+  }
+  .site-card{
+    display:block;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:16px;
+    overflow:hidden;
+    transition:border-color .18s ease, transform .18s ease;
+    cursor:pointer;
+  }
+  .site-card:hover{ border-color:var(--teal); transform:translateY(-4px); }
+  .site-top{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:14px 18px;
+    border-bottom:1px solid var(--line);
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--muted);
+  }
+  .site-top span.d{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .site-body{ padding:24px; }
+  .site-body h3{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:20px;
+    margin-bottom:8px;
+    color:var(--text);
+  }
+  .site-body p{ color:var(--muted); font-size:14.5px; margin-bottom:16px; }
+  .site-enter{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:13.5px;
+    color:var(--teal);
+    border-bottom:1px solid rgba(53,224,194,.35);
+    padding-bottom:2px;
+  }
+  .site-card:hover .site-enter{ border-color:var(--teal); }
+  .site-url{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    color:var(--muted);
+    margin-top:10px;
+    word-break:break-all;
+  }
+
+  /* ---------- CONTACT ---------- */
+  .contact-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+    gap:14px;
+  }
+  .contact-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:20px;
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    transition:border-color .15s ease, transform .15s ease;
+    cursor:pointer;
+  }
+  .contact-card:hover{ border-color:var(--violet); transform:translateY(-3px); }
+  .contact-icon{
+    width:38px; height:38px;
+    border-radius:9px;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(138,125,250,0.12);
+    flex-shrink:0;
+  }
+  .contact-icon svg{ width:19px; height:19px; }
+  .contact-label{ font-size:12.5px; color:var(--muted); font-family:'JetBrains Mono', monospace; }
+  .contact-value{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:15.5px; margin-top:2px; word-break:break-word; color:var(--text); }
+
+  footer{
+    padding:36px 0 50px;
+    text-align:center;
+    color:var(--muted);
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+  }
+  footer .heart{ color:var(--teal); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+
+  @media (max-width:520px){
+    .lang-switch{ top:auto; bottom:16px; right:16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="lang-switch" role="group" aria-label="Language">
+  <button type="button" data-lang="hy" class="active">ՀԱՅ</button>
+  <button type="button" data-lang="en">ENG</button>
+  <button type="button" data-lang="ru">РУС</button>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="avatar-stage">
+      <svg width="140" height="140" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="animated coding character">
+        <defs>
+          <linearGradient id="skinGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffd9ae"/>
+            <stop offset="1" stop-color="#f3bd8a"/>
+          </linearGradient>
+          <linearGradient id="screenGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#35e0c2"/>
+            <stop offset="1" stop-color="#8a7dfa"/>
+          </linearGradient>
+        </defs>
+        <circle cx="70" cy="72" r="58" fill="url(#screenGrad)" opacity="0.08"/>
+        <g>
+          <rect x="34" y="86" width="72" height="7" rx="2" fill="#202a34"/>
+          <rect x="42" y="58" width="56" height="30" rx="3" fill="#131a22" stroke="#202a34" stroke-width="2"/>
+          <rect x="46" y="62" width="48" height="22" rx="1.5" fill="url(#screenGrad)" opacity="0.9">
+            <animate attributeName="opacity" values="0.7;1;0.7" dur="2.4s" repeatCount="indefinite"/>
+          </rect>
+          <rect x="49" y="66" width="18" height="2.4" rx="1.2" fill="#0b0f14" opacity="0.55"/>
+          <rect x="49" y="71" width="26" height="2.4" rx="1.2" fill="#0b0f14" opacity="0.55"/>
+          <rect x="49" y="76" width="14" height="2.4" rx="1.2" fill="#0b0f14" opacity="0.55"/>
+        </g>
+        <path d="M46 108 C46 96 56 90 70 90 C84 90 94 96 94 108 L94 112 L46 112 Z" fill="#35e0c2"/>
+        <g>
+          <circle cx="70" cy="46" r="20" fill="url(#skinGrad)"/>
+          <path d="M50 42 C48 26 60 18 70 18 C82 18 92 27 90 42 C90 42 86 32 70 32 C56 32 51 38 50 42 Z" fill="#2a2a2a"/>
+          <g>
+            <ellipse cx="63" cy="47" rx="2.2" ry="2.6" fill="#22303a">
+              <animate attributeName="ry" values="2.6;2.6;0.2;2.6;2.6" keyTimes="0;0.85;0.9;0.95;1" dur="4s" repeatCount="indefinite"/>
+            </ellipse>
+            <ellipse cx="77" cy="47" rx="2.2" ry="2.6" fill="#22303a">
+              <animate attributeName="ry" values="2.6;2.6;0.2;2.6;2.6" keyTimes="0;0.85;0.9;0.95;1" dur="4s" repeatCount="indefinite"/>
+            </ellipse>
+          </g>
+          <path d="M62 55 Q70 61 78 55" stroke="#22303a" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </g>
+        <g>
+          <path d="M54 100 Q46 92 52 84" stroke="#f3bd8a" stroke-width="6" fill="none" stroke-linecap="round">
+            <animate attributeName="d" values="M54 100 Q46 92 52 84; M54 100 Q46 90 54 82; M54 100 Q46 92 52 84" dur="0.6s" repeatCount="indefinite"/>
+          </path>
+          <path d="M86 100 Q94 92 88 84" stroke="#f3bd8a" stroke-width="6" fill="none" stroke-linecap="round">
+            <animate attributeName="d" values="M86 100 Q94 92 88 84; M86 100 Q94 90 86 82; M86 100 Q94 92 88 84" dur="0.6s" begin="0.3s" repeatCount="indefinite"/>
+          </path>
+        </g>
+        <text x="18" y="30" font-family="JetBrains Mono, monospace" font-size="16" fill="#8a7dfa" opacity="0.7">
+          &lt;
+          <animate attributeName="y" values="30;22;30" dur="3s" repeatCount="indefinite"/>
+        </text>
+        <text x="112" y="34" font-family="JetBrains Mono, monospace" font-size="16" fill="#35e0c2" opacity="0.7">
+          /&gt;
+          <animate attributeName="y" values="34;26;34" dur="3.4s" repeatCount="indefinite"/>
+        </text>
+      </svg>
+    </div>
+
+    <div class="status-pill"><span class="dot"></span> <span data-i18n="badge"></span></div>
+
+    <h1>Մակիչ<span class="last">Կարապետյան</span></h1>
+
+    <p class="role">web_developer.exe --specialty="vibe coding"<span class="cursor"></span></p>
+
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#sites" data-i18n="btnWork"></a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <section id="about">
+      <div class="kicker">about.md</div>
+      <h2 data-i18n="aboutTitle"></h2>
+      <p class="about-text" data-i18n="aboutText"></p>
+    </section>
+
+    <section id="skills">
+      <div class="kicker">stack.json</div>
+      <h2 data-i18n="skillsTitle"></h2>
+      <div class="skill-grid">
+        <div class="skill-card"><span class="glyph">&lt;/&gt;</span><span class="name">HTML5</span></div>
+        <div class="skill-card"><span class="glyph">{ }</span><span class="name">CSS3</span></div>
+        <div class="skill-card"><span class="glyph">js</span><span class="name">JavaScript</span></div>
+        <div class="skill-card"><span class="glyph">git</span><span class="name">Git & GitHub</span></div>
+        <div class="skill-card"><span class="glyph">ai</span><span class="name">Vibe Coding</span></div>
+        <div class="skill-card"><span class="glyph">ui</span><span class="name">UI/UX Design</span></div>
+      </div>
+    </section>
+
+    <section id="sites">
+      <div class="kicker">my-sites/</div>
+      <h2 data-i18n="sitesTitle"></h2>
+
+      <div class="site-grid">
+
+        <a class="site-card" href="https://karapetyanmakich163-netizen.github.io/Erik-and-Tereza/" target="_blank" rel="noopener">
+          <div class="site-top">
+            <span class="d" style="background:#ff5f57"></span>
+            <span class="d" style="background:#febc2e"></span>
+            <span class="d" style="background:#28c840"></span>
+            <span style="margin-left:8px;">Erik-and-Tereza</span>
+          </div>
+          <div class="site-body">
+            <h3>Erik & Tereza</h3>
+            <p data-i18n="site1Desc"></p>
+            <span class="site-enter" data-i18n="siteEnter"></span>
+            <div class="site-url">karapetyanmakich163-netizen.github.io/Erik-and-Tereza</div>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="kicker">contact.sh</div>
+      <h2 data-i18n="contactTitle"></h2>
+      <div class="contact-grid">
+
+        <a class="contact-card" href="tel:+374098582462">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#8a7dfa" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="contact-label" data-i18n="labelPhone"></div>
+            <div class="contact-value">098 582 462</div>
+          </div>
+        </a>
+
+        <a class="contact-card" href="mailto:karapetyanmakich8@gmail.com">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#35e0c2" stroke-width="2"><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+          </div>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-value">karapetyanmakich8@gmail.com</div>
+          </div>
+        </a>
+
+        <a class="contact-card" href="https://t.me/makich_webdesign" target="_blank" rel="noopener">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#35e0c2" stroke-width="2"><path d="M21.5 3.5L2.5 10.6c-1 .4-1 1.9.1 2.2l4.7 1.4 1.8 5.4c.3.9 1.5 1.1 2.1.3l2.5-3.1 4.8 3.6c.9.6 2.1.1 2.3-1L21.5 3.5z"/></svg>
+          </div>
+          <div>
+            <div class="contact-label">Telegram</div>
+            <div class="contact-value">@makich_webdesign</div>
+          </div>
+        </a>
+
+        <a class="contact-card" href="https://instagram.com/hraviratom.serrr" target="_blank" rel="noopener">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#8a7dfa" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#8a7dfa" stroke="none"/></svg>
+          </div>
+          <div>
+            <div class="contact-label">Instagram</div>
+            <div class="contact-value">@hraviratom.serrr</div>
+          </div>
+        </a>
+
+        <a class="contact-card" href="https://karapetyanmakich163-netizen.github.io/" target="_blank" rel="noopener">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#35e0c2" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2c2.5 2.7 4 6.3 4 10s-1.5 7.3-4 10c-2.5-2.7-4-6.3-4-10s1.5-7.3 4-10z"/></svg>
+          </div>
+          <div>
+            <div class="contact-label" data-i18n="labelSites"></div>
+            <div class="contact-value">karapetyanmakich163-netizen.github.io</div>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    build with <span class="heart">♥</span> & JavaScript — Մակիչ Կարապետյան
+  </div>
+</footer>
+
+<script>
+  const translations = {
+    hy: {
+      badge: "Հասանելի է նոր նախագծերի համար",
+      btnWork: "Տեսնել կայքերը",
+      btnContact: "Կապ հաստատել",
+      aboutTitle: "Ինձ մասին",
+      aboutText: "Ես կայքեր եմ ստեղծում ժամանակակից գործիքներով և vibe coding-ի մոտեցմամբ․ արագ, ինտուիտիվ, արդյունքի վրա կենտրոնացած աշխատանք։ Սիրում եմ գաղափարը վերածել աշխատող, կոկիկ ու պրոֆեսիոնալ տեսք ունեցող կայքի։ Բաց եմ նոր պատվերների և համագործակցության համար։",
+      skillsTitle: "Գործիքներ և լեզուներ",
+      sitesTitle: "Իմ պատրաստած կայքերը",
+      site1Desc: "Երկու հերոսների պատմությանը նվիրված կայք։ Սեղմիր՝ ուղղակիորեն մտնելու համար։",
+      site2Title: "Մաֆիա խաղ",
+      site2Desc: "Եռալեզու «Մաֆիա» խաղի կայք, որը ես ինքս պատրաստել եմ։",
+      siteEnter: "Մուտք գործել կայք →",
+      contactTitle: "Կապ հաստատել",
+      labelPhone: "Հեռախոս",
+      labelSites: "Կայքեր"
+    },
+    en: {
+      badge: "Available for new projects",
+      btnWork: "See my sites",
+      btnContact: "Get in touch",
+      aboutTitle: "About me",
+      aboutText: "I build websites using modern tools and a vibe coding approach: fast, intuitive, result-focused work. I love turning an idea into a working site that looks clean and professional. Open to new orders and collaboration.",
+      skillsTitle: "Tools & languages",
+      sitesTitle: "Websites I've built",
+      site1Desc: "A site telling the story of two characters. Click to open it directly.",
+      site2Title: "Mafia game",
+      site2Desc: "A trilingual Mafia game website I built myself.",
+      siteEnter: "Visit site →",
+      contactTitle: "Get in touch",
+      labelPhone: "Phone",
+      labelSites: "Websites"
+    },
+    ru: {
+      badge: "Готов к новым проектам",
+      btnWork: "Смотреть сайты",
+      btnContact: "Связаться",
+      aboutTitle: "Обо мне",
+      aboutText: "Я создаю сайты современными инструментами и с подходом vibe coding: быстро, интуитивно, с фокусом на результат. Люблю превращать идею в рабочий сайт с аккуратным и профессиональным видом. Открыт к новым заказам и сотрудничеству.",
+      skillsTitle: "Инструменты и языки",
+      sitesTitle: "Мои созданные сайты",
+      site1Desc: "Сайт с историей двух персонажей. Нажми, чтобы открыть его напрямую.",
+      site2Title: "Игра «Мафия»",
+      site2Desc: "Трёхъязычный сайт игры «Мафия», который я сделал сам.",
+      siteEnter: "Перейти на сайт →",
+      contactTitle: "Связаться",
+      labelPhone: "Телефон",
+      labelSites: "Сайты"
+    }
+  };
+
+  const htmlLangMap = { hy: "hy", en: "en", ru: "ru" };
+
+  function applyLang(lang){
+    const dict = translations[lang];
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const key = el.getAttribute("data-i18n");
+      if(dict[key] !== undefined) el.textContent = dict[key];
+    });
+    document.documentElement.lang = htmlLangMap[lang] || "hy";
+    document.querySelectorAll(".lang-switch button").forEach(btn=>{
+      btn.classList.toggle("active", btn.dataset.lang === lang);
+    });
+  }
+
+  document.querySelectorAll(".lang-switch button").forEach(btn=>{
+    btn.addEventListener("click", () => applyLang(btn.dataset.lang));
+  });
+
+  applyLang("hy");
+</script>
+
+</body>
+</html>
